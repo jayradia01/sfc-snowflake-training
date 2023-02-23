@@ -4,7 +4,7 @@ Read this instructions in order to get a dataset from the marketplace.
 ## US_ZIP_CODE_METADATA
   * Once you are logged into your Snowflake account, click in the marketplace section
     * <img src="../images/7.png" width="1000">
-  * Search for the provider: **Compact Information Systems**
+  * Search for the provider: **Deep Sync**
     * <img src="../images/8.png" width="1000">
   * Select the FREE version
     * <img src="../images/9.png" width="1000">
