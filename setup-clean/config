@@ -1,0 +1,30 @@
+[connections]
+
+[connections.demo]
+accountname = ""
+username = ""
+password = ""
+dbname = "TRAINING"
+schemaname = "PUBLIC"
+warehousename = "XSMALL"
+rolename = "ACCOUNTADMIN"
+
+[variables]
+[options]
+# If set to false auto-completion will not occur interactive mode.
+auto_completion = True
+# main log file location. The file includes the log from SnowSQL main
+# executable.
+log_file = ~/.snowsql/lsnowsql_rt.log
+
+# bootstrap log file location. The file includes the log from SnowSQL bootstrap
+# executable.
+log_bootstrap_file = ~/.snowsql/log_bootstrap
+
+# Default log level. Possible values: "CRITICAL", "ERROR", "WARNING", "INFO"
+# and "DEBUG".
+log_level = DEBUG
+
+# Repository Base URL
+# The endpoint to download the SnowSQL main module.
+repository_base_url = https://sfc-repo.snowflakecomputing.com/snowsql
