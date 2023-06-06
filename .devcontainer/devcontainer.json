@@ -25,7 +25,7 @@
     "postCreateCommand": "chmod +x ./bin/post_create_setup.sh && ./bin/post_create_setup.sh",
     "customizations": {
         "codespaces": {
-            "openFiles": ["README.md"]
+            "openFiles": ["setup-clean/00_setup.sql"]
         },
         "vscode": {
             "settings": {

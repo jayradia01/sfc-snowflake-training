@@ -7,7 +7,7 @@ password = ""
 dbname = "TRAINING"
 schemaname = "PUBLIC"
 warehousename = "XSMALL"
-rolename = "ACCOUNTADMIN"
+rolename = "TRAININGDBA"
 
 [variables]
 [options]
