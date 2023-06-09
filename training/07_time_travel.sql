@@ -8,21 +8,25 @@ CREATE OR REPLACE TEMPORARY TABLE TEST_NO_EXPLICIT_TIMETRAVEL (
     row_id NUMBER(38,0) IDENTITY (1,1) NOT NULL,
     user_name VARCHAR(50) NOT NULL,
     insert_date DATE DEFAULT CURRENT_DATE() NOT NULL
-)
+);
 
+-- Is not required to run this line of code as a transaction but for other use cases might be a good idea
+-- Note if you are using the visual studio code copy the query_id 
 BEGIN;
  INSERT INTO TEST_NO_EXPLICIT_TIMETRAVEL (user_name) VALUES ('Enrique'),('Barry'),('Freddie');
 COMMIT;
 
 SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL;
 
-BEGIN;
- INSERT INTO TEST_NO_EXPLICIT_TIMETRAVEL (user_name) VALUES ('Other1'),('Other2'),('Other3');
-COMMIT;
-
 SHOW TABLES HISTORY;
 
-SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL AT(OFFSET => -60*0.8)
+SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL BEFORE(STATEMENT => '<<<CHANGE ME WITH QUERY ID>>>');
+
+BEGIN;
+ INSERT INTO TEST_NO_EXPLICIT_TIMETRAVEL (user_name) VALUES ('ERIC'),('SARA'),('MARK');
+COMMIT;
+
+SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL AT(OFFSET => -60*1);
 
 /***** 2.Time Travel allows to drop objects and restore them back again. 
          Restore dropped objects with no retention period only persists for the 
@@ -31,6 +35,7 @@ SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL AT(OFFSET => -60*0.8)
 DROP TABLE TEST_NO_EXPLICIT_TIMETRAVEL;
 SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL;
 UNDROP TABLE TEST_NO_EXPLICIT_TIMETRAVEL;
+SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL;
 
 /***** 3.Specifying the Data Retention Period for an Object, explicit key word DATA_RETENTION_TIME_IN_DAYS up to 90 
          with Enterprise edition +. TRASIENT tables are the exeption since there is no Fail-Safe for them
@@ -44,33 +49,23 @@ CREATE OR REPLACE TABLE TEST_EXPLICIT_TIMETRAVEL (
 DROP TABLE TEST_EXPLICIT_TIMETRAVEL;
 
 CREATE OR REPLACE TEMPORARY TABLE TEST_EXPLICIT_TIMETRAVEL (row_id NUMBER(38,0) IDENTITY (1,1) NOT NULL) DATA_RETENTION_TIME_IN_DAYS=3;
-CREATE OR REPLACE TRANSIENT TABLE TEST_EXPLICIT_TIMETRAVEL (row_id NUMBER(38,0) IDENTITY (1,1) NOT NULL) DATA_RETENTION_TIME_IN_DAYS=3;
 
 /***** 4. Creating new table from an specific point in time, If you create or replace 
           the table you are time traveling you will drop hidden object id in backend. 
           Doing this snowflake will loose its pointers to metadata of that table.
 *****/
-CREATE OR REPLACE TABLE TEST_NO_EXPLICIT_TIMETRAVEL_2
+CREATE OR REPLACE TABLE TEST_NO_EXPLICIT_TIMETRAVEL_2 AS
 SELECT * 
-FROM TEST_NO_EXPLICIT_TIMETRAVEL AT(OFFSET => -60*);
+FROM TEST_NO_EXPLICIT_TIMETRAVEL AT(OFFSET => -60*9);
+--FROM TEST_NO_EXPLICIT_TIMETRAVEL BEFORE(STATEMENT => '<<<CHANGE ME WITH QUERY ID>>>');
 
 SELECT * FROM TEST_NO_EXPLICIT_TIMETRAVEL_2;
 
-/***** 5. Understanding retention period
+/***** 5. Understanding retention period THIS WILL NOT WORK IF YOU RUN IT
+          ONLY FOR UNDERSTANDING THE CONCEPT
 *****/
+SHOW TABLES LIKE 'TEST_EXPLICIT_TIMETRAVEL' IN TRAINING.PUBLIC;
 
-SHOW TABLES LIKE 'TEST_EXPLICIT_TIMETRAVEL' IN TALENDTEST.PUBLIC;
-
-SELECT * FROM TEST_EXPLICIT_TIMETRAVEL;
-
-ALTER TABLE TEST_EXPLICIT_TIMETRAVEL SET DATA_RETENTION_TIME_IN_DAYS = 0;
-
-DROP TABLE TEST_EXPLICIT_TIMETRAVEL;
-UNDROP TABLE TEST_EXPLICIT_TIMETRAVEL;
-
-/***** 6. Restored db based on transaction
-*****/
-RESTORED_DB CLONE MY_DB BEFORE(STATEMENT => '');
 
 /***** 7. Create schema based on another schema with time travel.
 *****/

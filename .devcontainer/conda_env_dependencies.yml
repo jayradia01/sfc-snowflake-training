@@ -241,4 +241,5 @@ dependencies:
       - sqlalchemy==1.4.46
       - stevedore==4.1.1
       - threadpoolctl==3.1.0
+      - snowflake-cli-labs
 prefix: /opt/conda

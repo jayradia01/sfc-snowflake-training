@@ -1,5 +1,4 @@
 -- Caching and Query Performance
-
 USE ROLE ACCOUNTADMIN;
 USE DATABASE SNOWFLAKE_SAMPLE_DATA;
 USE SCHEMA TPCDS_SF100TCL;
@@ -15,16 +14,9 @@ SELECT DISTINCT C_SALUTATION,
        C_BIRTH_COUNTRY
 FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CUSTOMER;
 
-
-
 -- 2   Run the following SQL statement:
-
-SELECT 
-          MIN(ps_partkey)
-        , MAX(ps_partkey) 
-        
-FROM 
-        SNOWFLAKE_SAMPLE_DATA.TPCH_SF1000.PARTSUPP;
+SELECT MIN(ps_partkey), MAX(ps_partkey)
+FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1000.PARTSUPP;
 
 --         Now check the Query Profile. You should see a single node that says
 --         METADATA-BASED RESULT. This is because the query profile simply went
@@ -39,7 +31,6 @@ FROM
 --         supplier data.
 
 -- 5.5.1   Clear your cache:
-
 ALTER SESSION SET USE_CACHED_RESULT = FALSE;
 ALTER WAREHOUSE XSMALL SUSPEND;
 ALTER WAREHOUSE XSMALL RESUME;
@@ -49,13 +40,6 @@ ALTER WAREHOUSE XSMALL RESUME;
 --         Let’s start by selecting two columns, ps_suppkey, and ps_availqty with
 --         a WHERE clause selects only part of the dataset. This will cache the
 --         data for the two columns plus the column in the WHERE clause.
-
-SELECT 
-          ps_partkey
-        , ps_availqty
-        
-FROM 
-        SNOWFLAKE_SAMPLE_DATA.TPCH_SF1000.PARTSUPP;
-        
-WHERE 
-        ps_partkey > 1000000; 
+SELECT ps_partkey, ps_availqty
+FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1000.PARTSUPP;   
+WHERE ps_partkey > 1000000;

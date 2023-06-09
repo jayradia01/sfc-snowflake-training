@@ -23,7 +23,7 @@ ENV PYTHONUNBUFFERED 1
 FROM base AS installer
 USER root
 RUN apt-get update && \
-    apt-get install -y curl unzip && \
+    apt-get install -y curl unzip build-essential && \
     echo "running in codespace" > /tmp/.is_codespace_env.txt # Used by execution script to verify if we are running in a codespace docker environment
 SHELL ["conda", "run", "/bin/bash", "-c"]
 RUN pip install --upgrade pip
